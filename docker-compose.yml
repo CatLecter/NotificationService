@@ -1,0 +1,54 @@
+version: "3.8"
+
+services:
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3.10.0-management
+    hostname: rabbitmq
+    restart: always
+    env_file:
+      - ./rabbitmq/.env
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - ./rabbitmq/conf/definitions.json:/etc/rabbitmq/definitions.json
+      - ./rabbitmq/conf/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+
+  postgres:
+    image: postgres:14.2-bullseye
+    container_name: postgres
+    restart: always
+    env_file:
+      - ./postgres/.env
+    ports:
+      - "5432:5432"
+    expose:
+      - 5432
+    volumes:
+      - ./postgres/volume:/var/lib/postgresql/data
+
+  notification:
+    build: ./notification/
+    container_name: notification
+    restart: always
+    env_file:
+      - ./notification/.env
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+
+  nginx:
+    image: nginx:1.21.6
+    container_name: nginx
+    restart: on-failure
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./notification/static/:/static
+    ports:
+      - "80:80"
+    depends_on:
+      - notification
+      - rabbitmq

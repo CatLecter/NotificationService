@@ -1,0 +1,269 @@
+{
+	"info": {
+		"_postman_id": "d5071761-36a3-4d2a-a515-9ba25ae3977c",
+		"name": "Notification",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "UGCView",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"uuid\", pm.variables.replaceIn('{{$guid}}'));",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"source\": \"UGC\",\n    \"event_type\": \"REGULAR\",\n    \"content_id\": \"{{uuid}}\",\n    \"action\": \"ADD\",\n    \"data_endpoint\": \"http://0.0.0.0/api/v1/movies/{{uuid}}/view\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{host}}/api/v1/ugc_event/",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"ugc_event",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UGCBookmark",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"uuid\", pm.variables.replaceIn('{{$guid}}'));",
+							"",
+							"let actions = [\"ADD\", \"DELETE\"];",
+							"let rand_action = Math.floor(Math.random() * 2);",
+							"let action = actions[rand_action];",
+							"pm.globals.set(\"action\", action);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"source\": \"UGC\",\n    \"event_type\": \"REGULAR\",\n    \"content_id\": \"{{uuid}}\",\n    \"action\": \"{{action}}\",\n    \"data_endpoint\": \"http://0.0.0.0/api/v1/movies/{{uuid}}/bookmark\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{host}}/api/v1/ugc_event/",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"ugc_event",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"uuid\", pm.variables.replaceIn('{{$guid}}'));",
+							"",
+							"let actions = [\"UPDATE\", \"DELETE\"];",
+							"let action_number = Math.floor(Math.random() * 2);",
+							"let action = actions[action_number];",
+							"pm.globals.set(\"action\", action);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"source\": \"USER\",\n    \"event_type\": \"URGENT\",\n    \"content_id\": \"{{uuid}}\",\n    \"action\": \"{{action}}\",\n    \"data_endpoint\": \"http://0.0.0.0/api/v1/users/{{uuid}}\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{host}}/api/v1/ugc_event/",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"ugc_event",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Admin",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"uuid\", pm.variables.replaceIn('{{$guid}}'));",
+							"",
+							"let actions = [\"CREATE\", \"UPDATE\", \"DELETE\"];",
+							"let action_number = Math.floor(Math.random() * 3);",
+							"let action = actions[action_number];",
+							"pm.globals.set(\"action\", action);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"source\": \"ADMIN\",\n    \"event_type\": \"URGENT\",\n    \"content_id\": \"{{uuid}}\",\n    \"action\": \"{{action}}\",\n    \"data_endpoint\": \"http://0.0.0.0/api/v1/users/{{uuid}}\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{host}}/api/v1/ugc_event/",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"ugc_event",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Auth",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"uuid\", pm.variables.replaceIn('{{$guid}}'));",
+							"",
+							"let actions = [\"REGISTRATION\", \"LOGIN\"];",
+							"let action_number = Math.floor(Math.random() * 2);",
+							"let action = actions[action_number];",
+							"pm.globals.set(\"action\", action);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"source\": \"USER\",\n    \"event_type\": \"URGENT\",\n    \"content_id\": \"{{uuid}}\",\n    \"action\": \"{{action}}\",\n    \"data_endpoint\": \"http://0.0.0.0/api/v1/users/{{uuid}}\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{host}}/api/v1/ugc_event/",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"ugc_event",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "host",
+			"value": ""
+		},
+		{
+			"value": "",
+			"type": "string",
+			"disabled": true
+		}
+	]
+}
