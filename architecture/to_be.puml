@@ -4,56 +4,68 @@ skinparam componentStyle uml1
 skinparam backgroundColor DarkSlateGray
 
 skinparam linetype ortho
-skinparam classarrowcolor DarkRed
+skinparam classarrowcolor Black
 skinparam SequenceMessageAlign reverseDirection
 skinparam actorStyle awesome
 skinparam defaultTextAlignment center
 
 title [ARCH]: Notification
 
-frame EventSources << <color:Black>Источники событий</color> >> {
+frame EventSources << <color:Black>Источники событий</color> >> #lightslategray {
     rectangle UGC << <color:Black>Генерация периодических событий</color> >> #lightslategray
     rectangle "Auth/OAuth2.0" << <color:Black>Генерация автоматических событий</color> >>  as Auth #lightslategray
+}
+component Notification {
+    component API << <color:Black>API событий, о которых необходимо\n<color:Black>уведомить пользователя</color> >>
     component ContentManagerPanel << <color:Black>Панель работы с шаблонами\n<color:Black>сообщений и событиями</color> >>
 }
-component NotificationAPI << <color:Black>API событий, о которых необходимо\n<color:Black>уведомить пользователя</color> >>
-database MongoDB << <color:Black>БД сервиса нотификации</color> >> {
+database PostgreSQL << <color:Black>БД сервиса нотификации</color> >> {
     collections Notifications << <color:Black>События о которых необходимо\n<color:Black>уведомить пользователя c полями\n<color:Black>notification_id, content_id, last_update,\n<color:Black>last_notification_send</color> >>
-    collections MessageTemplates << <color:Black>HTML шаблоны сообщений</color> >>
+    collections LetterTemplates << <color:Black>HTML шаблоны сообщений</color> >>
 }
 queue RabbitMQ << <color:Black>Очереди событий, хранят только id событий</color> >> {
     queue Urgent
     queue Regular
 }
-node EmailSender << <color:Black>Рассылает на E-mails\n<color:Black>подготовленные уведомления</color> >>
-node Worker {
-    rectangle EventsGetter << <color:Black>Читает события из очереди</color> >>
-    rectangle DataEnricher << <color:Black>Обогащает данными полученное событие</color> >>
+node Sender {
+    rectangle Postman << <color:Black>Рассылает на E-mails\n<color:Black>подготовленные уведомления</color> >>
     rectangle LetterConstructor << <color:Black>Собирает письмо из шаблонов\n<color:Black>и полученных данных</color> >>
+}
+node Worker_1 {
+    rectangle EventsGetter_1 << <color:Black>Читает события из очереди</color> >>
+    rectangle DataEnricher_1 << <color:Black>Обогащает данными полученное событие</color> >>
+}
+node Worker_2 {
+    rectangle EventsGetter_2 << <color:Black>Читает события из очереди</color> >>
+    rectangle DataEnricher_2 << <color:Black>Обогащает данными полученное событие</color> >>
 }
 actor Users #honeydew
 actor Managers #honeydew
 component Scheduler << <color:Black>Сканирует БД на наличие новых\n<color:Black>уведомлений, проверяет не были ли\n<color:Black>они отправлены ранее</color> >>
 rectangle SearchAPI << <color:Black>Данные о фильмах</color> >> #lightslategray
 
-Auth --|> NotificationAPI
-UGC --|> NotificationAPI
-NotificationAPI --|> Notifications
-Scheduler <|-|> Notifications
-Scheduler -|> Urgent
-Scheduler --|> Regular
-Urgent --|> EventsGetter
-Regular --|> EventsGetter
-EventsGetter --|> DataEnricher
-DataEnricher --|> LetterConstructor
-DataEnricher <|-up-|> Auth
-DataEnricher -|> SearchAPI
-DataEnricher <|---|> Notifications
-LetterConstructor --|> EmailSender
-LetterConstructor <|-- MessageTemplates
-EmailSender --|> Users
-EmailSender ---|> Notifications
-ContentManagerPanel <|--|> MessageTemplates
-Managers <|-up-|> ContentManagerPanel
-NotificationAPI <|-- ContentManagerPanel
+Auth -[bold]---|> API
+UGC -[bold]---|> API
+API -[bold]right-|> Notifications
+Scheduler <|-[bold]---|> Notifications
+Scheduler -[bold]---|> Urgent
+Scheduler -[bold]---|> Regular
+Urgent -[bold]---|> EventsGetter_1
+Regular -[bold]---|> EventsGetter_2
+EventsGetter_1 -[bold]-|> DataEnricher_1
+EventsGetter_2 -[bold]-|> DataEnricher_2
+DataEnricher_1 -[bold]---|> LetterConstructor
+DataEnricher_2 -[bold]---|> LetterConstructor
+DataEnricher_1 <|-[bold]up----|> Auth
+DataEnricher_2 <|-[bold]up----|> Auth
+DataEnricher_1 -[bold]---|> SearchAPI
+DataEnricher_2 -[bold]---|> SearchAPI
+DataEnricher_1 <|-[bold]---|> Notifications
+DataEnricher_2 <|-[bold]---|> Notifications
+LetterConstructor -[bold]--|> Postman
+LetterConstructor <|-[bold]------ LetterTemplates
+Postman -[bold]---|> Users
+Postman -[bold]---|> Notifications
+ContentManagerPanel <|-[bold]---|> LetterTemplates
+Managers <|-[bold]up-|> ContentManagerPanel
 @endumls
