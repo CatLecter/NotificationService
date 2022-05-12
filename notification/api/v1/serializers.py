@@ -1,6 +1,5 @@
-from rest_framework.serializers import ModelSerializer
-
 from manager_panel.models import Events
+from rest_framework.serializers import ModelSerializer
 
 
 class UGCEventSerializer(ModelSerializer):

@@ -6,27 +6,33 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('manager_panel', '0001_initial'),
+        ("manager_panel", "0001_initial"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='messagetemplate',
-            name='file',
+            model_name="messagetemplate",
+            name="file",
         ),
         migrations.AddField(
-            model_name='messagetemplate',
-            name='template_file',
-            field=models.FileField(blank=True, upload_to='', verbose_name='Файл шаблона'),
+            model_name="messagetemplate",
+            name="template_file",
+            field=models.FileField(
+                blank=True, upload_to="", verbose_name="Файл шаблона"
+            ),
         ),
         migrations.AlterField(
-            model_name='messagetemplate',
-            name='name',
-            field=models.CharField(max_length=255, verbose_name='Имя шаблона'),
+            model_name="messagetemplate",
+            name="name",
+            field=models.CharField(max_length=255, verbose_name="Имя шаблона"),
         ),
         migrations.AlterField(
-            model_name='messagetemplate',
-            name='template_type',
-            field=models.CharField(choices=[('header', 'HEADER'), ('body', 'BODY'), ('footer', 'FOOTER')], max_length=20, verbose_name='Тип шаблона'),
+            model_name="messagetemplate",
+            name="template_type",
+            field=models.CharField(
+                choices=[("header", "HEADER"), ("body", "BODY"), ("footer", "FOOTER")],
+                max_length=20,
+                verbose_name="Тип шаблона",
+            ),
         ),
     ]
