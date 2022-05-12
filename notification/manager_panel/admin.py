@@ -40,7 +40,7 @@ class MessageTemplateAdmin(admin.ModelAdmin):
     list_display = (
         "name",
         "template_type",
-        "file_name",
+        "template_file",
         "created_at",
         "last_update",
     )
@@ -52,6 +52,6 @@ class MessageTemplateAdmin(admin.ModelAdmin):
     fields = (
         "name",
         "template_type",
-        "file_name",
+        "template_file",
     )
     ordering = ("name",)
