@@ -15,7 +15,10 @@ class EventsAdmin(admin.ModelAdmin):
         "content_id",
         "data_endpoint",
     )
-    list_filter = ("event_type", "source",)
+    list_filter = (
+        "event_type",
+        "source",
+    )
     search_fields = (
         "source",
         "notification_id",

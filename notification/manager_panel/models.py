@@ -35,13 +35,34 @@ class ActionType(models.TextChoices):
 
 
 class Events(TimeStampedModel):
-    notification_id = models.UUIDField(_("id события"), default=uuid.uuid4, editable=False, blank=True)
-    last_notification_send = models.DateTimeField(_("Дата отправки уведомления"), null=True, default=None)
-    source = models.CharField(_("Сервис-источник"), null=False, max_length=20, choices=Source.choices)
-    event_type = models.CharField(_("Приоритет"), max_length=20, choices=EventType.choices)
+    notification_id = models.UUIDField(
+        _("id события"),
+        default=uuid.uuid4,
+        editable=False,
+        blank=True,
+    )
+    last_notification_send = models.DateTimeField(
+        _("Дата отправки уведомления"),
+        null=True,
+        default=None,
+    )
+    source = models.CharField(
+        _("Сервис-источник"),
+        null=False,
+        max_length=20,
+        choices=Source.choices,
+    )
+    event_type = models.CharField(
+        _("Приоритет"),
+        max_length=20,
+        choices=EventType.choices,
+    )
     content_id = models.UUIDField(_("UUID сущности"), editable=True)
     action = models.CharField(_("Действие"), max_length=20, choices=ActionType.choices)
-    data_endpoint = models.URLField(_("Эндпоинт получения данных о сущности"), blank=True)
+    data_endpoint = models.URLField(
+        _("Эндпоинт получения данных о сущности"),
+        blank=True,
+    )
 
     class Meta:
         verbose_name = _("Событие")
@@ -60,8 +81,12 @@ class TemplateType(models.TextChoices):
 
 class MessageTemplate(TimeStampedModel):
     name = models.CharField(_("Имя элемента шаблона"), max_length=255)
-    template_type = models.CharField(_("Тип элемента шаблона"), max_length=20, choices=TemplateType.choices)
-    file_name = models.CharField(_("Имя файла элемента"), blank=True,  max_length=255)
+    template_type = models.CharField(
+        _("Тип элемента шаблона"),
+        max_length=20,
+        choices=TemplateType.choices,
+    )
+    file_name = models.CharField(_("Имя файла элемента"), blank=True, max_length=255)
 
     class Meta:
         verbose_name = _("Шаблон сообщения")
