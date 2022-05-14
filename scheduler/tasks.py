@@ -21,11 +21,19 @@ class EventExtractor:
     @backoff.on_exception(backoff.expo, OperationalError, max_tries=5)
     def get_event_uuids(self, event_type: str, limit: int):
         self.cursor.execute(
-            f"SELECT notification_id FROM events WHERE \
-            event_type = '{event_type}' LIMIT {limit}"
+            f"""SELECT notification_id FROM events
+            WHERE event_type = '{event_type}'
+            AND in_queue = FALSE LIMIT {limit}"""
         )
         event_uuids = self.cursor.fetchall()
-        return event_uuids
+        if event_uuids:
+            tuple_uuids = tuple([str(*_) for _ in event_uuids])
+            self.cursor.execute(
+                f"""UPDATE events SET in_queue = TRUE
+                WHERE notification_id IN {tuple_uuids}"""
+            )
+            print(tuple_uuids)
+            return event_uuids
 
 
 @celery_app.task
@@ -36,7 +44,6 @@ def transfer_events():
 
     try:
         with psycopg2.connect(
-            # **PG_DSN,
             dbname=PG_DSN["dbname"],
             user=PG_DSN["user"],
             password=PG_DSN["password"],
@@ -44,8 +51,7 @@ def transfer_events():
             cursor_factory=DictCursor,
         ) as pg_conn:
             pg = EventExtractor(pg_conn=pg_conn)
-            result = pg.get_event_uuids(EVENT_PRIORITY, EVENT_LIMIT)
-            print(result)
+            pg.get_event_uuids(EVENT_PRIORITY, EVENT_LIMIT)
     except (OperationalError, DatabaseError) as e:
         logger.exception(e)
 
