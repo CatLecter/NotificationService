@@ -4,11 +4,14 @@
 
 Для запуска проекта выполнить:
 ```shell
-cd notification && python manage.py collectstatic
+docker-compose up -d postgres
+cd notification
 python manage.py migrate
-cd .. && docker-compose up -d --build
+python manage.py createsuperuser
+python manage.py collectstatic
+cd ..
+docker-compose up -d --build
 ```
-
 Ссылки проекта:
 - панель менеджера контента: http://0.0.0.0/admin/
 - панель RabbitMQ: http://0.0.0.0/rabbitmq/#/

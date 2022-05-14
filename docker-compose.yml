@@ -34,6 +34,8 @@ services:
     restart: always
     env_file:
       - ./notification/.env
+    volumes:
+      - ./notification/media/:/usr/src/notification/media
     ports:
       - "8000:8000"
     depends_on:

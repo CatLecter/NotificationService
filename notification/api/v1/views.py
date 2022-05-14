@@ -1,6 +1,6 @@
+from manager_panel.models import Events
 from rest_framework.generics import CreateAPIView
 
-from manager_panel.models import Events
 from .serializers import UGCEventSerializer
 
 

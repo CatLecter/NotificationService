@@ -70,7 +70,7 @@ class Events(TimeStampedModel):
         db_table = '"public"."events"'
 
     def __str__(self):
-        return f"{self.notification_id}"
+        return self.notification_id
 
 
 class TemplateType(models.TextChoices):
@@ -80,15 +80,23 @@ class TemplateType(models.TextChoices):
 
 
 class MessageTemplate(TimeStampedModel):
-    name = models.CharField(_("Имя элемента шаблона"), max_length=255)
+    name = models.CharField(_("Имя шаблона"), max_length=255)
     template_type = models.CharField(
-        _("Тип элемента шаблона"),
+        _("Тип шаблона"),
         max_length=20,
         choices=TemplateType.choices,
     )
-    file_name = models.CharField(_("Имя файла элемента"), blank=True, max_length=255)
+    template_file = models.FileField(
+        _("Файл шаблона"),
+        # upload_to="templates",
+        blank=True,
+        null=False,
+    )
 
     class Meta:
         verbose_name = _("Шаблон сообщения")
         verbose_name_plural = _("Шаблоны сообщения")
         db_table = '"public"."message_templates"'
+
+    def __str__(self):
+        return self.name
