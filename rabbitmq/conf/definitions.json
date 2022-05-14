@@ -1,18 +1,56 @@
 {
-    "queues":[
+    "exchanges": [
         {
-          "name":"regular",
-          "vhost":"/",
-          "durable":true,
-          "auto_delete":false,
-          "arguments":{}
+            "name": "regular",
+            "vhost": "/",
+            "type": "fanout",
+            "durable": true,
+            "auto_delete": false,
+            "internal": false,
+            "arguments": {}
         },
         {
-          "name":"urgent",
-          "vhost":"/",
-          "durable":true,
-          "auto_delete":false,
-          "arguments":{}
+            "name": "urgent",
+            "vhost": "/",
+            "type": "fanout",
+            "durable": true,
+            "auto_delete": false,
+            "internal": false,
+            "arguments": {}
+        }
+    ],
+    "queues":[
+        {
+            "name":"regular",
+            "vhost":"/",
+            "durable":true,
+            "auto_delete":false,
+            "arguments":{}
+        },
+        {
+            "name":"urgent",
+            "vhost":"/",
+            "durable":true,
+            "auto_delete":false,
+            "arguments":{}
+        }
+    ],
+    "bindings": [
+        {
+            "source": "regular",
+            "vhost": "/",
+            "destination": "regular",
+            "destination_type": "queue",
+            "routing_key": "*",
+            "arguments": {}
+        },
+        {
+            "source": "urgent",
+            "vhost": "/",
+            "destination": "urgent",
+            "destination_type": "queue",
+            "routing_key": "*",
+            "arguments": {}
         }
     ]
 }
