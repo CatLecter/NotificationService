@@ -54,3 +54,48 @@ services:
     depends_on:
       - notification
       - rabbitmq
+
+  redis:
+    image: redis:7.0.0-bullseye
+    container_name: redis
+    restart: on-failure
+    ports:
+      - "6379:6379"
+    expose:
+      - 6379
+
+  scheduler_1:
+    build: ./scheduler/
+    container_name: scheduler_1
+    restart: always
+    env_file:
+      - ./scheduler/.env
+    environment:
+      - EVENT_PRIORITY=REGULAR
+      - EVENT_LIMIT=1000
+      - BROKER_DB=0
+    volumes:
+      - ./scheduler/log/:/usr/src/scheduler/log
+    depends_on:
+      - postgres
+      - redis
+    links:
+      - redis
+
+  scheduler_2:
+    build: ./scheduler/
+    container_name: scheduler_2
+    restart: always
+    env_file:
+      - ./scheduler/.env
+    environment:
+      - EVENT_PRIORITY=URGENT
+      - EVENT_LIMIT=1000
+      - BROKER_DB=1
+    volumes:
+      - ./scheduler/log/:/usr/src/scheduler/log
+    depends_on:
+      - postgres
+      - redis
+    links:
+      - redis
