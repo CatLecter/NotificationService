@@ -1,7 +1,7 @@
 {
     "exchanges": [
         {
-            "name": "regular",
+            "name": "REGULAR",
             "vhost": "/",
             "type": "fanout",
             "durable": true,
@@ -10,7 +10,7 @@
             "arguments": {}
         },
         {
-            "name": "urgent",
+            "name": "URGENT",
             "vhost": "/",
             "type": "fanout",
             "durable": true,
@@ -21,14 +21,14 @@
     ],
     "queues":[
         {
-            "name":"regular",
+            "name":"REGULAR",
             "vhost":"/",
             "durable":true,
             "auto_delete":false,
             "arguments":{}
         },
         {
-            "name":"urgent",
+            "name":"URGENT",
             "vhost":"/",
             "durable":true,
             "auto_delete":false,
@@ -37,17 +37,17 @@
     ],
     "bindings": [
         {
-            "source": "regular",
+            "source": "REGULAR",
             "vhost": "/",
-            "destination": "regular",
+            "destination": "REGULAR",
             "destination_type": "queue",
             "routing_key": "*",
             "arguments": {}
         },
         {
-            "source": "urgent",
+            "source": "URGENT",
             "vhost": "/",
-            "destination": "urgent",
+            "destination": "URGENT",
             "destination_type": "queue",
             "routing_key": "*",
             "arguments": {}

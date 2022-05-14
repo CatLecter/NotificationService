@@ -74,6 +74,7 @@ services:
       - EVENT_PRIORITY=REGULAR
       - EVENT_LIMIT=1000
       - BROKER_DB=0
+      - EXCHANGE=REGULAR
     volumes:
       - ./scheduler/log/:/usr/src/scheduler/log
     depends_on:
@@ -92,6 +93,7 @@ services:
       - EVENT_PRIORITY=URGENT
       - EVENT_LIMIT=1000
       - BROKER_DB=1
+      - EXCHANGE=URGENT
     volumes:
       - ./scheduler/log/:/usr/src/scheduler/log
     depends_on:
