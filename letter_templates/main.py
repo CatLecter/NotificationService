@@ -1,9 +1,8 @@
-from jinja2 import Environment, FileSystemLoader
+from letter_templates.interface import create_html
 
 
-env = Environment(loader=FileSystemLoader('./templates'))
-template = env.get_template('register.html')
-html = template.render(register_title='Петя')
+if __name__ == '__main__':
 
-with open('main.html', 'w') as f:
-    f.writelines(html)
+    html = create_html()
+    with open('test.html', 'w') as f:
+        f.writelines(html)
