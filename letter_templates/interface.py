@@ -11,15 +11,11 @@ from .models import (
     HtmlTemplatesABC,
     HtmlTemplates,
     FooterTemplateABC,
-    FooterTemplate,
     HeaderTemplateABC,
     HeaderTemplate,
     RegisterTemplateABC,
-    RegisterTemplate,
     LoginTemplateABC,
-    LoginTemplate,
     RegularTemplateABC,
-    RegularTemplate,
     UrgentTemplateABC,
     UrgentTemplate
 )
