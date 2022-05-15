@@ -17,14 +17,14 @@ ___
             if some_template is not None:
                 jinja_template = template_getter.get_html_template(some_template)
                 return jinja_template.render(**some_template.dict(by_alias=True))
-    
+
         header_html, body_html, footer_html = get_html(header), get_html(body_template), get_html(footer)
-    
+
         final_html = ''
         for current_html in (header_html, body_html, footer_html):
             if current_html is not None:
                 final_html += current_html
-    
+
         return FinalHtml(
             html_page=final_html,
             header_html=header_html,
@@ -36,7 +36,7 @@ ___
 Пример использывания:
 
     from letter_templates.interface import create_html
-    
+
     html = create_html()
 
 Для передачи аргументов используются модели из модуля **./models.py**
@@ -75,7 +75,7 @@ ___
         description='some text'
 
     )
-    
+
     html = create_html(
             body_template=registrator,
     )
@@ -83,6 +83,6 @@ ___
 На выходе получаем класс **FinalHtml**
 
 Для с ним можно работать как со строкой, поэтому для сохранения можно использовать:
-    
+
     with open('test.html', 'w') as f:
         f.writelines(html)

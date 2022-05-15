@@ -1,4 +1,4 @@
-from abc import ABC, abstractmethod
+from abc import ABC
 from uuid import UUID, uuid4
 from os.path import exists, join
 from typing import Union
