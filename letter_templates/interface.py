@@ -17,7 +17,7 @@ from .models import (
     LoginTemplateABC,
     RegularTemplateABC,
     UrgentTemplateABC,
-    UrgentTemplate
+    UrgentTemplate,
 )
 
 
@@ -27,14 +27,11 @@ TemplatesUnionType = Union[
     RegisterTemplateABC,
     LoginTemplateABC,
     RegularTemplateABC,
-    UrgentTemplateABC
+    UrgentTemplateABC,
 ]
 
 BodyTemplateType = Union[
-    RegisterTemplateABC,
-    LoginTemplateABC,
-    RegularTemplateABC,
-    UrgentTemplateABC
+    RegisterTemplateABC, LoginTemplateABC, RegularTemplateABC, UrgentTemplateABC
 ]
 
 
@@ -54,7 +51,7 @@ class TemplatesGetter(BaseModel):
             return self.templates.regular_dir
         elif isinstance(template, UrgentTemplateABC):
             return self.templates.urgent_dir
-        raise Exception(f'Template not Found {template}')
+        raise Exception(f"Template not Found {template}")
 
     def get_html_template(self, template: TemplatesUnionType) -> Template:
         base_dir = self.get_required_template_dir(template)
@@ -68,9 +65,13 @@ class TemplatesGetter(BaseModel):
 
             return datetime.fromtimestamp(getmtime(join(template_dir, filename)))
 
-        files = tuple((modification_date(file), file) for file in listdir(template_dir) if '.html' in file)
+        files = tuple(
+            (modification_date(file), file)
+            for file in listdir(template_dir)
+            if ".html" in file
+        )
         if not files:
-            raise FileNotFoundError(f'HTML file in {template_dir} not found!')
+            raise FileNotFoundError(f"HTML file in {template_dir} not found!")
 
         files = sorted(files, key=lambda el: el[0])
         return files[0][-1]
@@ -85,7 +86,7 @@ class TemplatesGetter(BaseModel):
 
 @dataclass(frozen=True)
 class FinalHtml:
-    __slots__ = ('html_page', 'header_html', 'body_html', 'footer_html')
+    __slots__ = ("html_page", "header_html", "body_html", "footer_html")
     html_page: str
     header_html: str
     body_html: Optional[str]
@@ -100,9 +101,9 @@ class FinalHtml:
 
 @validate_arguments
 def create_html(
-        body_template: BodyTemplateType = UrgentTemplate(),
-        header: Optional[HeaderTemplateABC] = HeaderTemplate(),
-        footer: Optional[FooterTemplateABC] = None
+    body_template: BodyTemplateType = UrgentTemplate(),
+    header: Optional[HeaderTemplateABC] = HeaderTemplate(),
+    footer: Optional[FooterTemplateABC] = None,
 ) -> FinalHtml:
     template_getter = TemplatesGetter()
 
@@ -111,9 +112,13 @@ def create_html(
             jinja_template = template_getter.get_html_template(some_template)
             return jinja_template.render(**some_template.dict(by_alias=True))
 
-    header_html, body_html, footer_html = get_html(header), get_html(body_template), get_html(footer)
+    header_html, body_html, footer_html = (
+        get_html(header),
+        get_html(body_template),
+        get_html(footer),
+    )
 
-    final_html = ''
+    final_html = ""
     for current_html in (header_html, body_html, footer_html):
         if current_html is not None:
             final_html += current_html
@@ -122,5 +127,5 @@ def create_html(
         html_page=final_html,
         header_html=header_html,
         body_html=body_html,
-        footer_html=footer_html
+        footer_html=footer_html,
     )
