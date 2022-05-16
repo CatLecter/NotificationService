@@ -14,6 +14,7 @@ class EventsAdmin(admin.ModelAdmin):
         "event_type",
         "content_id",
         "data_endpoint",
+        "in_queue",
     )
     list_filter = (
         "event_type",

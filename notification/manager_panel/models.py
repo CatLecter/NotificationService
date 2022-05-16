@@ -63,6 +63,7 @@ class Events(TimeStampedModel):
         _("Эндпоинт получения данных о сущности"),
         blank=True,
     )
+    in_queue = models.BooleanField(_("Отправлено в очередь?"), default=False)
 
     class Meta:
         verbose_name = _("Событие")
