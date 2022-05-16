@@ -1,5 +1,6 @@
 import backoff
-from models import Film, PrimaryData, User
+import requests
+from models import Film, PrimaryData, ResponseFilms, ResponseUser, User
 from psycopg2 import OperationalError
 from psycopg2.extensions import connection
 
@@ -19,14 +20,12 @@ class EventEnricher:
         data = self.cursor.fetchone()
         return PrimaryData(**data)
 
-    def get_user(self, endpoint: str) -> User:
-        # Ручкв для получения дополнительных данных.
-        # http://0.0.0.0/api/v1/users/{UUID}
+    def get_user(self, endpoint: str, action: str) -> ResponseUser:
+        user_data = requests.get(endpoint)
+        user = User(**user_data.json())
+        return ResponseUser(action=action, user=user)
 
-        return User()
-
-    def get_film(self, endpoint: str) -> Film:
-        # Ручка для получения дополнительных данных.
-        # http://0.0.0.0/api/v1/films/{UUID}
-
-        return Film()
+    def get_films(self, endpoint: str, source: str) -> ResponseFilms:
+        film_data = requests.get(endpoint)
+        film = Film(**film_data.json())
+        return ResponseFilms(source=source, films=film)

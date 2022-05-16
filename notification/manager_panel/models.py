@@ -19,7 +19,7 @@ class EventType(models.TextChoices):
 
 
 class Source(models.TextChoices):
-    UGC = "UGC", _("UGC")
+    UGC = "", _("UGC")
     AUTH = "AUTH", _("AUTH")
     USER = "USER", _("USER")
     ADMIN = "ADMIN", _("ADMIN")

@@ -64,3 +64,24 @@ class Film(BaseModel):
     directors: List[PersonBrief]
     writers: List[PersonBrief]
     actors: List[PersonBrief]
+
+
+class AbridgedFilm(BaseModel):
+    """Сокращённая модель фильма для ответа."""
+
+    title: str
+    imdb_rating: Optional[float]
+
+
+class ResponseFilms(BaseModel):
+    """Модель ответа со списком фильмов."""
+
+    source: str
+    films: List[AbridgedFilm]
+
+
+class ResponseUser(BaseModel):
+    """Модель ответа о пользователе."""
+
+    action: str
+    user: List[User]
