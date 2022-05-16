@@ -23,6 +23,7 @@ Jinja2 = "^3.1.2"
 pydantic = "^1.9.0"
 pre-commit = "^2.19.0"
 email-validator = "^1.2.1"
+fastapi-mail = "^1.0.8"
 
 [tool.poetry.dev-dependencies]
 black = "^22.3.0"
