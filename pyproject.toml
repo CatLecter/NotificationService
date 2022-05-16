@@ -23,6 +23,7 @@ loguru = "^0.6.0"
 backoff = "^2.0.1"
 celery = {extras = ["redis"], version = "^5.2.6"}
 pika = "^1.2.1"
+pydantic = "^1.9.0"
 
 [tool.poetry.dev-dependencies]
 black = "^22.3.0"
