@@ -1,6 +1,6 @@
 import backoff
 import requests
-from models import Film, PrimaryData, ResponseFilms, ResponseUser, User
+from models import AbridgedFilm, Film, PrimaryData, ResponseFilms, ResponseUser, User
 from psycopg2 import OperationalError
 from psycopg2.extensions import connection
 
@@ -28,4 +28,8 @@ class EventEnricher:
     def get_films(self, endpoint: str, source: str) -> ResponseFilms:
         film_data = requests.get(endpoint)
         film = Film(**film_data.json())
-        return ResponseFilms(source=source, films=film)
+        abridged_film = AbridgedFilm(
+            title=film.title,
+            imdb_rating=film.imdb_rating,
+        )
+        return ResponseFilms(source=source, films=abridged_film)
