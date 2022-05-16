@@ -1,0 +1,5 @@
+.env
+example.env
+log/
+.dockerignore
+Dockerfile
