@@ -133,7 +133,7 @@ venv.bak/
 .spyproject
 
 # Rope project settings
-.ropeproject
+.ropeprojec t
 
 # mkdocs documentation
 /site
@@ -162,3 +162,4 @@ cython_debug/
 /postgres/volume/
 /notification/static/
 /scheduler/log/
+/worker/log/
