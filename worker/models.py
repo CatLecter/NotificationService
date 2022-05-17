@@ -13,10 +13,11 @@ class PrimaryData(BaseModel):
     last_notification_send: Optional[datetime] = None
     source: str
     event_type: str
-    content_id: UUID
+    content_uuid: UUID
     action: str
     data_endpoint: str
     in_queue: bool
+    recipient_uuid: UUID
 
 
 class GenreBrief(BaseModel):
@@ -66,22 +67,7 @@ class Film(BaseModel):
     actors: List[PersonBrief]
 
 
-class AbridgedFilm(BaseModel):
-    """Сокращённая модель фильма для ответа."""
-
-    title: str
-    imdb_rating: Optional[float]
-
-
-class ResponseFilms(BaseModel):
-    """Модель ответа со списком фильмов."""
-
-    source: str
-    films: List[AbridgedFilm]
-
-
-class ResponseUser(BaseModel):
-    """Модель ответа о пользователе."""
-
-    action: str
-    user: List[User]
+class ResponseModel(BaseModel):
+    email: str
+    templates_type: enumerate
+    data: dict

@@ -1,8 +1,15 @@
 import backoff
 import requests
-from models import AbridgedFilm, Film, PrimaryData, ResponseFilms, ResponseUser, User
+from loguru import logger
+from models import Film, PrimaryData, User
 from psycopg2 import OperationalError
 from psycopg2.extensions import connection
+from pydantic import BaseModel
+from requests import HTTPError
+
+from .config import DEPARTURE_ADDRESS, log_config
+
+logger.add(**log_config)
 
 
 class EventEnricher:
@@ -13,23 +20,26 @@ class EventEnricher:
 
     @backoff.on_exception(backoff.expo, OperationalError, max_tries=5)
     def enrich(self, event_uuid: str) -> PrimaryData:
-        # TODO: исправить передачу события в скрипт
         self.cursor.execute(
             f"""SELECT * FROM events WHERE notification_id = '{event_uuid}'"""
         )
         data = self.cursor.fetchone()
         return PrimaryData(**data)
 
-    def get_user(self, endpoint: str, action: str) -> ResponseUser:
+    def get_user(self, endpoint: str) -> User:
         user_data = requests.get(endpoint)
-        user = User(**user_data.json())
-        return ResponseUser(action=action, user=user)
+        return User(**user_data.json())
 
-    def get_films(self, endpoint: str, source: str) -> ResponseFilms:
+    def get_film(self, endpoint: str) -> Film:
         film_data = requests.get(endpoint)
-        film = Film(**film_data.json())
-        abridged_film = AbridgedFilm(
-            title=film.title,
-            imdb_rating=film.imdb_rating,
-        )
-        return ResponseFilms(source=source, films=abridged_film)
+        return Film(**film_data.json())
+
+    def give(self, data: BaseModel) -> None:
+        try:
+            requests.post(url=DEPARTURE_ADDRESS, json=data.json())
+        except HTTPError as e:
+            print(e)
+            logger.exception(e)
+
+    def processing(self, data: BaseModel) -> None:
+        pass

@@ -18,6 +18,8 @@ RABBIT_USER = os.getenv("RABBIT_USERNAME")
 RABBIT_PASSWORD = os.getenv("RABBIT_PASSWORD")
 AMQP_URL = f"amqp://{RABBIT_USER}:{RABBIT_PASSWORD}@{RABBIT_HOST}/"
 QUEUE = os.getenv("QUEUE")
+SENDER_HOST = os.getenv("SENDER_HOST")
+DEPARTURE_ADDRESS = f"http://{SENDER_HOST}/api/v1/email"
 
 log_config = {
     "sink": f"./log/{QUEUE}.log",

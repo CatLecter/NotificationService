@@ -1,8 +1,8 @@
 import psycopg2
-import requests
 from enricher import EventEnricher
 from getter import EventGetter
 from loguru import logger
+from models import ResponseModel
 from pika import BlockingConnection, URLParameters
 from pika.exceptions import AMQPConnectionError
 from psycopg2.extras import DictCursor
@@ -29,18 +29,18 @@ def worker():
                 pg = EventEnricher(pg_conn)
                 for uuid in uuids:
                     primary_data = pg.enrich(uuid)
+                    if primary_data.source == "UGC":
+                        pg.processing(primary_data)
                     if primary_data.source == "USER" or "ADMIN":
                         user_data = pg.get_user(
                             endpoint=primary_data.data_endpoint,
-                            action=primary_data.action,
                         )
-                        requests.post(url="url...", json=user_data.json())
-                    if primary_data.source == "UGC":
-                        films_data = pg.get_films(
-                            endpoint=primary_data.data_endpoint,
-                            source=primary_data.source,
+                        data = ResponseModel(
+                            email=user_data.email,
+                            templates_type=primary_data.action,
+                            data=user_data.dict(),
                         )
-                        requests.post(url="url...", json=films_data.json())
+                        pg.give(data)
     except AMQPConnectionError as e:
         logger.exception(e)
 

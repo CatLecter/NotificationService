@@ -117,7 +117,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"source\": \"USER\",\n    \"event_type\": \"URGENT\",\n    \"content_uuid\": \"{{uuid}}\",\n    \"recipient_uuid\": \"{{$randomUUID}}\",\n    \"action\": \"{{action}}\",\n    \"data_endpoint\": \"http://0.0.0.0/api/v1/users/{{uuid}}\"\n}\n",
+					"raw": "{\n    \"source\": \"USER\",\n    \"event_type\": \"URGENT\",\n    \"content_uuid\": \"{{uuid}}\",\n    \"recipient_uuid\": \"{{uuid}}\",\n    \"action\": \"{{action}}\",\n    \"data_endpoint\": \"http://0.0.0.0/api/v1/users/{{uuid}}\"\n}\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -164,7 +164,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"source\": \"ADMIN\",\n    \"event_type\": \"URGENT\",\n    \"content_uuid\": \"{{uuid}}\",\n    \"recipient_uuid\": \"{{$randomUUID}}\",\n    \"action\": \"{{action}}\",\n    \"data_endpoint\": \"http://0.0.0.0/api/v1/users/{{uuid}}\"\n}\n",
+					"raw": "{\n    \"source\": \"ADMIN\",\n    \"event_type\": \"URGENT\",\n    \"content_uuid\": \"{{uuid}}\",\n    \"recipient_uuid\": \"{{uuid}}\",\n    \"action\": \"{{action}}\",\n    \"data_endpoint\": \"http://0.0.0.0/api/v1/users/{{uuid}}\"\n}\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -211,7 +211,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"source\": \"USER\",\n    \"event_type\": \"URGENT\",\n    \"content_uuid\": \"{{uuid}}\",\n    \"recipient_uuid\": \"{{$randomUUID}}\",\n    \"action\": \"{{action}}\",\n    \"data_endpoint\": \"http://0.0.0.0/api/v1/users/{{uuid}}\"\n}\n",
+					"raw": "{\n    \"source\": \"USER\",\n    \"event_type\": \"URGENT\",\n    \"content_uuid\": \"{{uuid}}\",\n    \"recipient_uuid\": \"{{uuid}}\",\n    \"action\": \"{{action}}\",\n    \"data_endpoint\": \"http://0.0.0.0/api/v1/users/{{uuid}}\"\n}\n",
 					"options": {
 						"raw": {
 							"language": "json"
