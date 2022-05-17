@@ -3,16 +3,24 @@ from uuid import UUID, uuid4
 from os.path import exists, join
 from typing import Union
 
-from pydantic import BaseModel, Field, constr, validator, EmailStr, DirectoryPath
+from pydantic import (
+    BaseModel,
+    Field,
+    constr,
+    validator,
+    EmailStr,
+    DirectoryPath,
+    FilePath,
+)
 
 
-TEMPLATE_DIR = "./templates"
-REGISTER_DIR = join(TEMPLATE_DIR, "registration")
-HEADER_DIR = join(TEMPLATE_DIR, "header")
-FOOTER_DIR = join(TEMPLATE_DIR, "footer")
-LOGIN_DIR = join(TEMPLATE_DIR, "login")
-REGULAR_DIR = join(TEMPLATE_DIR, "regular")
-URGENT_DIR = join(TEMPLATE_DIR, "urgent")
+TEMPLATE = "./templates"
+REGISTER = "register.html"
+HEADER = "header.html"
+FOOTER = "footer.html"
+LOGIN = "login.html"
+REGULAR = "regul.html"
+URGENT = "ureg.html"
 
 
 def create_abc_field(alias: str) -> Field:
@@ -116,26 +124,31 @@ class UrgentTemplate(UrgentTemplateABC):
 
 class HtmlTemplatesABC(BaseModel, ABC):
     base_dir: DirectoryPath = create_abc_field("base_dir")
-    register_dir: DirectoryPath = create_abc_field("register_dir")
-    header_dir: DirectoryPath = create_abc_field("header_dir")
-    footer_dir: DirectoryPath = create_abc_field("footer_dir")
-    login_dir: DirectoryPath = create_abc_field("login_dir")
-    regular_dir: DirectoryPath = create_abc_field("regular_dir")
-    urgent_dir: DirectoryPath = create_abc_field("urgent_dir")
+    regis: str = create_abc_field("regis")
+    header: str = create_abc_field("header")
+    footer: str = create_abc_field("footer")
+    login: str = create_abc_field("login")
+    regular: str = create_abc_field("regular")
+    urgent: str = create_abc_field("urgent")
 
 
 class HtmlTemplates(HtmlTemplatesABC):
-    base_dir: DirectoryPath = TEMPLATE_DIR
-    register_dir: DirectoryPath = REGISTER_DIR
-    header_dir: DirectoryPath = HEADER_DIR
-    footer_dir: DirectoryPath = FOOTER_DIR
-    login_dir: DirectoryPath = LOGIN_DIR
-    regular_dir: DirectoryPath = REGULAR_DIR
-    urgent_dir: DirectoryPath = URGENT_DIR
+    base_dir: DirectoryPath = TEMPLATE
+    regis: str = REGISTER
+    header: str = HEADER
+    footer: str = FOOTER
+    login: str = LOGIN
+    regular: str = REGULAR
+    urgent: str = URGENT
 
     @classmethod
     @validator("*")
-    def dirs_must_exists(cls, value: DirectoryPath):
-        if not exists(value):
-            raise ValueError
+    def dirs_must_exists(cls, value: str, values: dict):
+        if isinstance(value, DirectoryPath):
+            if not exists(value):
+                raise ValueError
+        else:
+            base_dir = values["base_dir"]
+            if not exists(join(base_dir, value)):
+                raise ValueError
         return value

@@ -5,19 +5,20 @@ from typing import Union, Optional
 from datetime import datetime
 
 from jinja2 import Environment, FileSystemLoader, Template
-from pydantic import BaseModel, DirectoryPath, validate_arguments
+from pydantic import BaseModel, DirectoryPath, validate_arguments, FilePath
 
 from .models import (
     HtmlTemplatesABC,
     HtmlTemplates,
     FooterTemplateABC,
+    FooterTemplate,
     HeaderTemplateABC,
     HeaderTemplate,
     RegisterTemplateABC,
     LoginTemplateABC,
     RegularTemplateABC,
     UrgentTemplateABC,
-    UrgentTemplate,
+    RegularTemplate,
 )
 
 
@@ -38,29 +39,29 @@ BodyTemplateType = Union[
 class TemplatesGetter(BaseModel):
     templates: HtmlTemplatesABC = HtmlTemplates()
 
-    def get_required_template_dir(self, template: TemplatesUnionType) -> DirectoryPath:
+    def get_required_template_dir(self, template: TemplatesUnionType) -> str:
         if isinstance(template, FooterTemplateABC):
-            return self.templates.footer_dir
+            return self.templates.footer
         elif isinstance(template, HeaderTemplateABC):
-            return self.templates.header_dir
+            return self.templates.header
         elif isinstance(template, RegisterTemplateABC):
-            return self.templates.register_dir
+            return self.templates.regis
         elif isinstance(template, LoginTemplateABC):
-            return self.templates.login_dir
+            return self.templates.login
         elif isinstance(template, RegularTemplateABC):
-            return self.templates.regular_dir
+            return self.templates.regular
         elif isinstance(template, UrgentTemplateABC):
-            return self.templates.urgent_dir
+            return self.templates.urgent
         raise Exception(f"Template not Found {template}")
 
     def get_html_template(self, template: TemplatesUnionType) -> Template:
-        base_dir = self.get_required_template_dir(template)
-        html_file_name = self.get_html_template_file(base_dir)
+        html_file_name = self.get_required_template_dir(template)
+        base_dir = self.templates.base_dir
         return self.get_required_template(base_dir=base_dir, file=html_file_name)
 
     @staticmethod
     @validate_arguments
-    def get_html_template_file(template_dir: DirectoryPath) -> str:
+    def get_html_template_file(template_dir: FilePath) -> str:
         def modification_date(filename):
 
             return datetime.fromtimestamp(getmtime(join(template_dir, filename)))
@@ -101,8 +102,8 @@ class FinalHtml:
 
 @validate_arguments
 def create_html(
-    body_template: BodyTemplateType = UrgentTemplate(),
-    header: Optional[HeaderTemplateABC] = HeaderTemplate(),
+    body_template: BodyTemplateType = RegularTemplate(),
+    header: Optional[HeaderTemplateABC] = None,
     footer: Optional[FooterTemplateABC] = None,
 ) -> FinalHtml:
     template_getter = TemplatesGetter()

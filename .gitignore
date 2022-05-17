@@ -161,3 +161,4 @@ cython_debug/
 
 /postgres/volume/
 /notification/static/
+/.pre-commit-config.yaml
