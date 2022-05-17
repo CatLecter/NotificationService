@@ -57,13 +57,14 @@ class Events(TimeStampedModel):
         max_length=20,
         choices=EventType.choices,
     )
-    content_id = models.UUIDField(_("UUID сущности"), editable=True)
+    content_uuid = models.UUIDField(_("UUID сущности"), editable=True)
     action = models.CharField(_("Действие"), max_length=20, choices=ActionType.choices)
     data_endpoint = models.URLField(
         _("Эндпоинт получения данных о сущности"),
         blank=True,
     )
     in_queue = models.BooleanField(_("Отправлено в очередь?"), default=False)
+    recipient_uuid = models.UUIDField(_("UUID получателя"), editable=True, blank=True)
 
     class Meta:
         verbose_name = _("Событие")
