@@ -1,13 +1,12 @@
 import backoff
 import requests
+from config import DEPARTURE_ADDRESS, log_config
 from loguru import logger
 from models import Film, PrimaryData, User
 from psycopg2 import OperationalError
 from psycopg2.extensions import connection
 from pydantic import BaseModel
 from requests import HTTPError
-
-from .config import DEPARTURE_ADDRESS, log_config
 
 logger.add(**log_config)
 
@@ -24,7 +23,8 @@ class EventEnricher:
             f"""SELECT * FROM events WHERE notification_id = '{event_uuid}'"""
         )
         data = self.cursor.fetchone()
-        return PrimaryData(**data)
+        if data:
+            return PrimaryData(**data)
 
     def get_user(self, endpoint: str) -> User:
         user_data = requests.get(endpoint)
@@ -38,8 +38,4 @@ class EventEnricher:
         try:
             requests.post(url=DEPARTURE_ADDRESS, json=data.json())
         except HTTPError as e:
-            print(e)
             logger.exception(e)
-
-    def processing(self, data: BaseModel) -> None:
-        pass

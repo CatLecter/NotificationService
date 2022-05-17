@@ -118,18 +118,18 @@ services:
     links:
       - rabbitmq
 
-#  worker_2:
-#    build: ./worker/
-#    container_name: worker_2
-#    restart: always
-#    env_file:
-#      - ./worker/.env
-#    environment:
-#      - QUEUE=URGENT
-#    volumes:
-#      - ./worker/log/:/usr/src/worker/log
-#    depends_on:
-#      - postgres
-#      - rabbitmq
-#    links:
-#      - rabbitmq
+  worker_2:
+    build: ./worker/
+    container_name: worker_2
+    restart: always
+    env_file:
+      - ./worker/.env
+    environment:
+      - QUEUE=URGENT
+    volumes:
+      - ./worker/log/:/usr/src/worker/log
+    depends_on:
+      - postgres
+      - rabbitmq
+    links:
+      - rabbitmq

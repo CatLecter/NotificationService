@@ -1,4 +1,5 @@
 from datetime import datetime
+from enum import Enum
 from typing import List, Optional
 from uuid import UUID
 
@@ -69,5 +70,5 @@ class Film(BaseModel):
 
 class ResponseModel(BaseModel):
     email: str
-    templates_type: enumerate
+    templates_type: Enum
     data: dict
