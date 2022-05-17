@@ -12,9 +12,10 @@ class EventsAdmin(admin.ModelAdmin):
         "last_notification_send",
         "source",
         "event_type",
-        "content_id",
+        "content_uuid",
         "data_endpoint",
         "in_queue",
+        "recipient_uuid",
     )
     list_filter = (
         "event_type",
@@ -24,14 +25,16 @@ class EventsAdmin(admin.ModelAdmin):
         "source",
         "notification_id",
         "last_notification_send",
-        "content_id",
+        "content_uuid",
         "event_type",
+        "recipient_uuid",
     )
     fields = (
         "source",
         "event_type",
-        "content_id",
+        "content_uuid",
         "data_endpoint",
+        "recipient_uuid",
     )
     ordering = ("event_type",)
 
