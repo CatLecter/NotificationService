@@ -61,8 +61,6 @@ services:
     restart: on-failure
     ports:
       - "6379:6379"
-    expose:
-      - 6379
 
   scheduler_1:
     build: ./scheduler/
