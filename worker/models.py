@@ -1,6 +1,6 @@
 from datetime import datetime
 from enum import Enum
-from typing import List, Optional
+from typing import Optional
 from uuid import UUID
 
 from pydantic import BaseModel
@@ -51,7 +51,7 @@ class User(BaseModel):
     email: str
     is_active: bool
     is_superuser: bool
-    roles: List[Role]
+    roles: list[Role]
     is_totp_enabled: bool
 
 
@@ -62,10 +62,10 @@ class Film(BaseModel):
     title: str
     imdb_rating: Optional[float]
     description: Optional[str]
-    genres: List[GenreBrief]
-    directors: List[PersonBrief]
-    writers: List[PersonBrief]
-    actors: List[PersonBrief]
+    genres: list[GenreBrief]
+    directors: list[PersonBrief]
+    writers: list[PersonBrief]
+    actors: list[PersonBrief]
 
 
 class ResponseModel(BaseModel):
