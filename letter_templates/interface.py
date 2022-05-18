@@ -8,49 +8,45 @@ from jinja2 import Environment, FileSystemLoader, Template
 from pydantic import BaseModel, DirectoryPath, validate_arguments, FilePath
 
 from .models import (
-    HtmlTemplatesABC,
     HtmlTemplates,
-    FooterTemplateABC,
     FooterTemplate,
-    HeaderTemplateABC,
     HeaderTemplate,
-    RegisterTemplateABC,
-    LoginTemplateABC,
-    RegularTemplateABC,
-    UrgentTemplateABC,
     RegularTemplate,
+    RegisterTemplate,
+    LoginTemplate,
+    UrgentTemplate,
 )
 
 
 TemplatesUnionType = Union[
-    FooterTemplateABC,
-    HeaderTemplateABC,
-    RegisterTemplateABC,
-    LoginTemplateABC,
-    RegularTemplateABC,
-    UrgentTemplateABC,
+    FooterTemplate,
+    HeaderTemplate,
+    RegisterTemplate,
+    LoginTemplate,
+    RegularTemplate,
+    UrgentTemplate,
 ]
 
 BodyTemplateType = Union[
-    RegisterTemplateABC, LoginTemplateABC, RegularTemplateABC, UrgentTemplateABC
+    RegisterTemplate, LoginTemplate, RegularTemplate, UrgentTemplate
 ]
 
 
 class TemplatesGetter(BaseModel):
-    templates: HtmlTemplatesABC = HtmlTemplates()
+    templates: HtmlTemplates = HtmlTemplates()
 
     def get_required_template_dir(self, template: TemplatesUnionType) -> str:
-        if isinstance(template, FooterTemplateABC):
+        if isinstance(template, FooterTemplate):
             return self.templates.footer
-        elif isinstance(template, HeaderTemplateABC):
+        elif isinstance(template, HeaderTemplate):
             return self.templates.header
-        elif isinstance(template, RegisterTemplateABC):
+        elif isinstance(template, RegisterTemplate):
             return self.templates.regis
-        elif isinstance(template, LoginTemplateABC):
+        elif isinstance(template, LoginTemplate):
             return self.templates.login
-        elif isinstance(template, RegularTemplateABC):
+        elif isinstance(template, RegularTemplate):
             return self.templates.regular
-        elif isinstance(template, UrgentTemplateABC):
+        elif isinstance(template, UrgentTemplate):
             return self.templates.urgent
         raise Exception(f"Template not Found {template}")
 
@@ -103,8 +99,8 @@ class FinalHtml:
 @validate_arguments
 def create_html(
     body_template: BodyTemplateType = RegularTemplate(),
-    header: Optional[HeaderTemplateABC] = None,
-    footer: Optional[FooterTemplateABC] = None,
+    header: Optional[HeaderTemplate] = None,
+    footer: Optional[FooterTemplate] = None,
 ) -> FinalHtml:
     template_getter = TemplatesGetter()
 
