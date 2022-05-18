@@ -1,3 +1,5 @@
+from json.decoder import JSONDecodeError
+
 import backoff
 import requests
 from config import DEPARTURE_ADDRESS, log_config
@@ -30,9 +32,11 @@ class EventEnricher:
         user_data = requests.get(endpoint)
         return User(**user_data.json())
 
+    @backoff.on_exception(backoff.expo, (JSONDecodeError, AssertionError), max_tries=5)
     def get_film(self, endpoint: str) -> Film:
-        film_data = requests.get(endpoint)
-        return Film(**film_data.json())
+        film_data_response = requests.get(endpoint)
+        assert film_data_response.status == 200, "Bad response!"
+        return Film(**film_data_response.json())
 
     def give(self, data: BaseModel) -> None:
         try:
