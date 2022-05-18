@@ -11,6 +11,42 @@ from psycopg2.extras import DictCursor
 logger.add(**log_config)
 
 
+def process_uuid(pg: EventEnricher, uuid):
+    primary_data = pg.enrich(uuid)
+    if primary_data:
+        if primary_data.source == "UGC":
+            film_data = pg.get_film(
+                endpoint=primary_data.data_endpoint,
+            )
+            user_data = pg.get_user(
+                endpoint=primary_data.data_endpoint,
+            )
+            data = ResponseModel(
+                email=user_data.email,
+                templates_type=primary_data.action,
+                data=film_data.dict(),
+            )
+            pg.give(data)
+        if any([(primary_data == "USER"), (primary_data == "ADMIN")]):
+            _user_data = pg.get_user(
+                endpoint=primary_data.data_endpoint,
+            )
+            data = ResponseModel(
+                email=_user_data.email,
+                templates_type=primary_data.action,
+                data=_user_data.dict(),
+            )
+            pg.give(data)
+
+
+def amqp_conn_worker(amqp_conn: BlockingConnection, pg_conn) -> None:
+    amqp = EventGetter(conn=amqp_conn)
+    uuids = amqp.get_uuid()
+    pg = EventEnricher(pg_conn)
+    for uuid in uuids:
+        process_uuid(pg, uuid)
+
+
 def worker():
     try:
         with psycopg2.connect(
@@ -23,35 +59,8 @@ def worker():
             URLParameters(AMQP_URL),
         ) as amqp_conn:
             while True:
-                amqp = EventGetter(conn=amqp_conn)
-                uuids = amqp.get_uuid()
-                pg = EventEnricher(pg_conn)
-                for uuid in uuids:
-                    primary_data = pg.enrich(uuid)
-                    if primary_data:
-                        if primary_data.source == "UGC":
-                            film_data = pg.get_film(
-                                endpoint=primary_data.data_endpoint,
-                            )
-                            user_data = pg.get_user(
-                                endpoint=primary_data.data_endpoint,
-                            )
-                            data = ResponseModel(
-                                email=user_data.email,
-                                templates_type=primary_data.action,
-                                data=film_data.dict(),
-                            )
-                            pg.give(data)
-                        if any([(primary_data == "USER"), (primary_data == "ADMIN")]):
-                            _user_data = pg.get_user(
-                                endpoint=primary_data.data_endpoint,
-                            )
-                            data = ResponseModel(
-                                email=_user_data.email,
-                                templates_type=primary_data.action,
-                                data=_user_data.dict(),
-                            )
-                            pg.give(data)
+                amqp_conn_worker(amqp_conn, pg_conn)
+
     except AMQPConnectionError as e:
         logger.exception(e)
 
