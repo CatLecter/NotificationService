@@ -12,6 +12,10 @@ logger.add(**log_config)
 
 
 def process_uuid(pg: EventEnricher, uuid):
+    # т.к. нам нужно обрабатывать и срочные события, то ждать получения целой пачки UUID
+    # чтобы сходить за ними в базу не представляется возможным, воркер должен уметь
+    # обратывать одно конкретное событие, а если он не справляется, то всегда можно
+    # поднять ещё один сконфигурировав docker-compose.yml
     primary_data = pg.enrich(uuid)
     if primary_data:
         if primary_data.source == "UGC":
