@@ -17,7 +17,7 @@ class EventExtractor:
             AND in_queue = FALSE LIMIT {limit}"""
         )
         list_uuids = self.cursor.fetchall()
-        tuple_uuids = tuple([str(*_) for _ in list_uuids])
+        tuple_uuids = tuple(str(*_) for _ in list_uuids)
         return tuple_uuids
 
     @backoff.on_exception(backoff.expo, OperationalError, max_tries=5)
