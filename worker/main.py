@@ -42,7 +42,7 @@ def worker():
                                 data=film_data.dict(),
                             )
                             pg.give(data)
-                        if primary_data.source == "USER" or "ADMIN":
+                        if any([(primary_data == "USER"), (primary_data == "ADMIN")]):
                             _user_data = pg.get_user(
                                 endpoint=primary_data.data_endpoint,
                             )
